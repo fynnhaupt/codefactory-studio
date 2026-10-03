@@ -1,0 +1,66 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    cooldown:
+      default-days: 1
+    groups:
+      react:
+        patterns: ['react', 'react-dom', '@types/react', '@types/react-dom']
+        update-types:
+          - major
+
+      next:
+        patterns: ['next', '@next*']
+        update-types:
+          - major
+
+      prisma:
+        patterns: ['prisma', '@prisma*']
+        update-types:
+          - major
+
+      minor-patch-prod:
+        dependency-type: 'production'
+        update-types:
+          - minor
+          - patch
+
+      minor-patch-dev:
+        dependency-type: 'development'
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    cooldown:
+      default-days: 1
+    groups:
+      docker:
+        patterns: ['*']
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    cooldown:
+      default-days: 1
+    groups:
+      github-actions:
+        patterns: ['*']
+
+  - package-ecosystem: 'devcontainers'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    cooldown:
+      default-days: 1
+    groups:
+      devcontainers:
+        patterns: ['*']
+  
