@@ -14,10 +14,8 @@ body:
   - type: input
     attributes:
       label: Version
-      description: |
-        Enter the version of CodeFactory Studio you are using.
-        Please verify that you are reproducing the issue in a [currently-supported version](https://github.com/fynnhaupt/codefactory-studio/blob/main/SECURITY.md#supported-version) of CodeFactory Studio.
-      placeholder: "e.g. 1.0.0-rc.1"
+      description: Please verify that you are reproducing the issue in a [currently-supported version](https://github.com/fynnhaupt/codefactory-studio/blob/main/SECURITY.md#supported-version) of CodeFactory Studio.
+      placeholder: e.g. 1.0.0-rc.1
     validations:
       required: true
 
