@@ -1,3 +1,9 @@
+<div align="center">
+  <img width="340" alt="CodeFactory Logo" src="https://github.com/user-attachments/assets/a9745b28-25af-405d-a13d-de7700072102" />
+</div>
+
+# Studio
+
 ## What is CodeFactory Studio?
 
 A self-hosted typescript platform for orchestrating automated software factories through a unified dashboard:
