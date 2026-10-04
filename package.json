@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint --cache --max-warnings 0 --no-warn-ignored .",
+    "lint:fix": "eslint --cache --max-warnings 0 --no-warn-ignored --fix .",
+    "format": "prettier --check --ignore-unknown .",
+    "format:fix": "prettier --write --ignore-unknown .",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "16.3.8",
@@ -20,8 +24,19 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{html,css,json,md,yml,yaml}": "prettier --check --ignore-unknown",
+    "*.{ts,mts,cts,tsx,js,mjs,cjs,jsx}": [
+      "eslint --cache --max-warnings 0 --no-warn-ignored",
+      "prettier --check --ignore-unknown"
+    ]
   },
   "packageManager": "pnpm@12.6.0"
 }

@@ -63,4 +63,3 @@ updates:
     groups:
       devcontainers:
         patterns: ['*']
-  
