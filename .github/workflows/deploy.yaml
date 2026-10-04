@@ -114,6 +114,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       - uses: actions/attest@v4
         with:
-          subject-name: index.docker.io/my-docker-hub-namespace/my-docker-hub-repository
+          subject-name: ${{ env.registry }}/${{ github.repository }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
