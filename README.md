@@ -4,6 +4,15 @@
 
 # Studio
 
+<div>
+  <a href="https://github.com/fynnhaupt/codefactory-studio/actions/workflows/check.yaml">
+    <img src="https://github.com/fynnhaupt/codefactory-studio/actions/workflows/check.yaml/badge.svg" alt="Check">
+  </a>
+  <a href="https://github.com/fynnhaupt/codefactory-studio/actions/workflows/deploy.yaml">
+    <img src="https://github.com/fynnhaupt/codefactory-studio/actions/workflows/deploy.yaml/badge.svg" alt="Deploy">
+  </a>
+</div>
+
 ## What is CodeFactory Studio?
 
 A self-hosted typescript platform for orchestrating automated software factories through a unified dashboard:
