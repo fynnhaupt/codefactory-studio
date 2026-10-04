@@ -4,6 +4,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import { cn } from 'cn';
 import './globals.css';
 
+import { ThemeProvider } from '@/components/global/theme-provider';
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans'
@@ -16,9 +18,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<'/[locale]'>) {
   return (
-    <html lang="en" className={cn(inter.variable, 'antialiased')}>
+    <html lang="en" suppressHydrationWarning className={cn(inter.variable, 'antialiased')}>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
