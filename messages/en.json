@@ -22,5 +22,8 @@
     "hide-password": "Hide password",
     "remember-me": "Remember me",
     "submit": "Login"
+  },
+  "messages": {
+    "unknown-error": "An unknown error occurred. Please try again."
   }
 }

@@ -6,15 +6,12 @@ import { User } from 'better-auth';
 import { LoginResult, TestAuthOptions, TestCookie } from 'better-auth/plugins';
 
 export interface TestHelpers {
-  betterAuthCreateCredentialUser(input: {
-    user?: Partial<User> & Record<string, unknown>;
-    password: string;
-  }): Promise<User>;
   betterAuthCreateUser(overrides?: Partial<User> & Record<string, unknown>): Promise<User>;
   betterAuthCreateOrganization(
     overrides?: Record<string, unknown>
   ): Promise<Record<string, unknown> | null>;
   betterAuthSaveUser(user: User): Promise<User>;
+  betterAuthSetUserPassword(opts: { user: User; password: string }): Promise<null>;
   betterAuthSaveOrganization(org: Record<string, unknown>): Promise<Record<string, unknown> | null>;
   betterAuthAddMember(opts: {
     userId: string;
@@ -42,25 +39,6 @@ async function getTestUtils() {
 
 export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
   const tasks = {
-    betterAuthCreateCredentialUser: async ({ user: overrides = {}, password }) => {
-      const testAuthContext = await testAuth.$context;
-      const user = await testAuthContext.internalAdapter.createUser(
-        {
-          name: overrides.name ?? 'Test User',
-          email: overrides.email ?? `test-${crypto.randomUUID()}@example.com`,
-          emailVerified: true,
-          ...overrides
-        },
-        { method: 'test' }
-      );
-      await testAuthContext.internalAdapter.createAccount({
-        accountId: user.id,
-        providerId: 'credential',
-        userId: user.id,
-        password: await testAuthContext.password.hash(password)
-      });
-      return user;
-    },
     betterAuthCreateUser: async (overrides) => {
       const testUtils = await getTestUtils();
       return testUtils.createUser(overrides);
@@ -73,6 +51,19 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
     betterAuthSaveUser: async (user) => {
       const testUtils = await getTestUtils();
       return await testUtils.saveUser(user);
+    },
+    betterAuthSetUserPassword: async ({ user, password }) => {
+      const ctx = await testAuth.$context;
+      const hash = await ctx.password.hash(password);
+
+      await ctx.internalAdapter.createAccount({
+        accountId: user.id,
+        providerId: 'credential',
+        userId: user.id,
+        password: hash
+      });
+
+      return null;
     },
     betterAuthSaveOrganization: async (org) => {
       const testUtils = await getTestUtils();

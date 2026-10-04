@@ -7,10 +7,10 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      betterAuthCreateCredentialUser(input: {
-        user?: Partial<User> & Record<string, unknown>;
-        password: string;
-      }): Chainable<User>;
+      createUser(
+        password: string,
+        overrides?: Partial<User> & Record<string, unknown>
+      ): Chainable<null>;
       login(overrides?: Partial<User> & Record<string, unknown>, reload?: boolean): Chainable<null>;
       logout(reload?: boolean): Chainable<null>;
       betterAuthCreateUser(overrides?: Partial<User> & Record<string, unknown>): Chainable<User>;
@@ -18,6 +18,7 @@ declare global {
         overrides?: Record<string, unknown>
       ): Chainable<Record<string, unknown> | null>;
       betterAuthSaveUser(user: User): Chainable<User>;
+      betterAuthSetUserPassword(opts: { user: User; password: string }): Chainable<null>;
       betterAuthSaveOrganization(
         org: Record<string, unknown>
       ): Chainable<Record<string, unknown> | null>;
@@ -40,6 +41,14 @@ declare global {
     }
   }
 }
+
+Cypress.Commands.add('createUser', (password, overrides) => {
+  cy.betterAuthCreateUser(overrides).then((user) => {
+    cy.betterAuthSaveUser(user);
+    cy.betterAuthSetUserPassword({ user, password });
+    cy.wrap(null);
+  });
+});
 
 Cypress.Commands.add('login', (overrides, reload = false) => {
   cy.betterAuthCreateUser(overrides).then((user) => {
@@ -78,10 +87,6 @@ Cypress.Commands.add('login', (overrides, reload = false) => {
   return cy.wrap(null);
 });
 
-Cypress.Commands.add('betterAuthCreateCredentialUser', (input) => {
-  cy.task('betterAuthCreateCredentialUser', input);
-});
-
 Cypress.Commands.add('logout', (reload = false) => {
   cy.clearCookie('better-auth.session_token');
   if (reload) cy.reload();
@@ -97,6 +102,10 @@ Cypress.Commands.add('betterAuthCreateOrganization', (overrides) => {
 
 Cypress.Commands.add('betterAuthSaveUser', (user) => {
   cy.task('betterAuthSaveUser', user);
+});
+
+Cypress.Commands.add('betterAuthSetUserPassword', (opts) => {
+  cy.task('betterAuthSetUserPassword', opts);
 });
 
 Cypress.Commands.add('betterAuthSaveOrganization', (org) => {

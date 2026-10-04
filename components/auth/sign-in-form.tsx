@@ -21,13 +21,15 @@ import { authClient } from '@/lib/auth-client';
 import { toast } from '@/components/ui/toast';
 import { Checkbox } from '../ui/checkbox';
 import { Spinner } from '../ui/spinner';
+import { useParams } from 'next/navigation';
 
-type Props = Readonly<{ locale: string }>;
-
-export function SignInForm({ locale }: Props) {
+export function SignInForm() {
+  const messagesT = useTranslations('messages');
   const t = useTranslations('sign-in');
 
+  const params = useParams<{ locale: string }>();
   const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const schema = z.object({
@@ -50,21 +52,28 @@ export function SignInForm({ locale }: Props) {
   });
 
   const onSubmit = async ({ email, password, rememberMe }: z.infer<typeof schema>) => {
-    const { error } = await authClient.signIn.email({
-      email,
-      password,
-      rememberMe
-    });
+    try {
+      const { error } = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe
+      });
 
-    if (error) {
+      if (error) {
+        toast.add({
+          type: 'error',
+          description: error.message
+        });
+        return;
+      }
+
+      router.replace('/', { locale: params.locale });
+    } catch {
       toast.add({
         type: 'error',
-        description: error.message
+        description: messagesT('unknown-error')
       });
-      return;
     }
-
-    router.replace('/', { locale });
   };
 
   return (
@@ -91,7 +100,9 @@ export function SignInForm({ locale }: Props) {
                     placeholder={t('email.placeholder')}
                     autoComplete="email"
                   />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  {fieldState.invalid && (
+                    <FieldError id="form-sign-in-email-error" errors={[fieldState.error]} />
+                  )}
                 </Field>
               )}
             />
@@ -125,7 +136,9 @@ export function SignInForm({ locale }: Props) {
                       </InputGroupButton>
                     </InputGroupAddon>
                   </InputGroup>
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  {fieldState.invalid && (
+                    <FieldError id="form-sign-in-password-error" errors={[fieldState.error]} />
+                  )}
                 </Field>
               )}
             />
@@ -149,8 +162,9 @@ export function SignInForm({ locale }: Props) {
               )}
             />
             <Button
-              className="w-full"
               type="submit"
+              id="form-sign-in-submit"
+              className="w-full"
               disabled={!form.formState.isValid || form.formState.isSubmitting}
             >
               {form.formState.isSubmitting ? <Spinner /> : t('submit')}
