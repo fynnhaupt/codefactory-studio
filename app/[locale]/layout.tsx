@@ -5,6 +5,7 @@ import { cn } from 'cn';
 import './globals.css';
 
 import { ThemeProvider } from '@/components/global/theme-provider';
+import { Toaster } from '@/components/ui/toast';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,7 +27,10 @@ export default function RootLayout({ children }: LayoutProps<'/[locale]'>) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider>
+            {children}
+            <Toaster />
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>
