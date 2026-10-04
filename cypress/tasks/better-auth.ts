@@ -6,6 +6,10 @@ import { User } from 'better-auth';
 import { LoginResult, TestAuthOptions, TestCookie } from 'better-auth/plugins';
 
 export interface TestHelpers {
+  betterAuthCreateCredentialUser(input: {
+    user?: Partial<User> & Record<string, unknown>;
+    password: string;
+  }): Promise<User>;
   betterAuthCreateUser(overrides?: Partial<User> & Record<string, unknown>): Promise<User>;
   betterAuthCreateOrganization(
     overrides?: Record<string, unknown>
@@ -38,6 +42,25 @@ async function getTestUtils() {
 
 export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
   const tasks = {
+    betterAuthCreateCredentialUser: async ({ user: overrides = {}, password }) => {
+      const testAuthContext = await testAuth.$context;
+      const user = await testAuthContext.internalAdapter.createUser(
+        {
+          name: overrides.name ?? 'Test User',
+          email: overrides.email ?? `test-${crypto.randomUUID()}@example.com`,
+          emailVerified: true,
+          ...overrides
+        },
+        { method: 'test' }
+      );
+      await testAuthContext.internalAdapter.createAccount({
+        accountId: user.id,
+        providerId: 'credential',
+        userId: user.id,
+        password: await testAuthContext.password.hash(password)
+      });
+      return user;
+    },
     betterAuthCreateUser: async (overrides) => {
       const testUtils = await getTestUtils();
       return testUtils.createUser(overrides);

@@ -7,6 +7,10 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
+      betterAuthCreateCredentialUser(input: {
+        user?: Partial<User> & Record<string, unknown>;
+        password: string;
+      }): Chainable<User>;
       login(overrides?: Partial<User> & Record<string, unknown>, reload?: boolean): Chainable<null>;
       logout(reload?: boolean): Chainable<null>;
       betterAuthCreateUser(overrides?: Partial<User> & Record<string, unknown>): Chainable<User>;
@@ -72,6 +76,10 @@ Cypress.Commands.add('login', (overrides, reload = false) => {
   });
 
   return cy.wrap(null);
+});
+
+Cypress.Commands.add('betterAuthCreateCredentialUser', (input) => {
+  cy.task('betterAuthCreateCredentialUser', input);
 });
 
 Cypress.Commands.add('logout', (reload = false) => {

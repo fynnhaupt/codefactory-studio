@@ -1,1 +1,20 @@
-{}
+{
+  "SignIn": {
+    "title": "Sign in",
+    "description": "Enter your email and password to access your account.",
+    "email": "Email",
+    "password": "Password",
+    "emailInvalid": "Enter a valid email address.",
+    "passwordRequired": "Enter your password.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "invalidCredentialsTitle": "Unable to sign in",
+    "invalidCredentials": "The email or password is incorrect.",
+    "requestFailedTitle": "Sign-in failed",
+    "requestFailed": "We couldn't sign you in. Please try again.",
+    "networkErrorTitle": "Connection problem",
+    "networkError": "We couldn't reach the server. Check your connection and try again."
+  }
+}
