@@ -74,9 +74,18 @@ jobs:
             const packages = ${{ needs.changesets-deploy.outputs.packages }};
             const pkg = packages.find(pkg => pkg.name.includes(name));
             return pkg?.version ?? '';
+      - id: is-pre
+        uses: actions/github-script@v9
+        with:
+          result-encoding: string
+          script: |
+            const version = '${{ steps.app-version.outputs.result }}';
+            return (/-[0-9A-Za-z.-]+$/).test(version);
 
     outputs:
       version: ${{ steps.app-version.outputs.result }}
+      is-pre: ${{ steps.is-pre.outputs.result }}
+      is-stable: ${{ steps.is-pre.outputs.result == 'false' }}
 
   docker-deploy:
     if: needs.evaluate-packages.outputs.version != ''
@@ -105,6 +114,8 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}},value=${{ needs.evaluate-packages.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ needs.evaluate-packages.outputs.version }}
+            type=raw,value=rc,enable=${{ needs.evaluate-packages.outputs.is-pre }}
+            type=raw,value=latest,enable=${{ needs.evaluate-packages.outputs.is-stable }}
       - id: push
         uses: docker/build-push-action@v7
         with:
