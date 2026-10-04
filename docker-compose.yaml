@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: vscode
+    volumes:
+      - postgres_data:/var/lib/postgresql:Z
+
+volumes:
+  postgres_data:
