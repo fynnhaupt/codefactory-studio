@@ -81,6 +81,7 @@ jobs:
           node-version: 24
           cache: 'pnpm'
       - run: pnpm install
+      - run: NODE_ENV=test pnpm prisma migrate deploy
       - run: pnpm cypress:run
 
   audit:
