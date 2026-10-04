@@ -16,6 +16,68 @@ CodeFactory Studio is completely **open-source** and **self-hosted** - designed 
 
 ## Quick Start
 
+### Option 1: Docker Compose
+
+**Prerequisites**: [Docker](https://www.docker.com/)
+
+1. Create a `docker-compose.yaml` and fill out all missing variables:
+
+```yaml
+services:
+  codefactory-studio:
+    image: ghcr.io/fynnhaupt/codefactory-studio:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - 3000:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DATABASE_URL: postgresql://codefactory-studio:<your-password-here>@postgres/codefactory-studio
+      BETTER_AUTH_SECRET: <your-secret-here>
+      BETTER_AUTH_URL: <your-public-url-here>
+
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: codefactory-studio
+      POSTGRES_PASSWORD: <your-password-here>
+      POSTGRES_DB: codefactory-studio
+    volumes:
+      - postgres_data:/var/lib/postgresql:Z
+
+volumes:
+  postgres_data:
+```
+
+You can generate secrets with `openssl rand -base64 32` if you have `openssl` installed.
+
+2. Start **CodeFactory Studio**
+
+```sh
+docker compose up -d
+```
+
+### Option 2: Docker
+
+**Prerequisites**: [Docker](https://www.docker.com/), [Postgres](https://www.postgresql.org/)
+
+1. Start **CodeFactory Studio**
+
+```sh
+docker run -d \
+  --name codefactory-studio \
+  --restart unless-stopped \
+  -p 3000:3000 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e 'DATABASE_URL=postgresql://<your-username-here>:<your-password-here>@<your-postgres-host>:5432/<your-db-here>' \
+  -e 'BETTER_AUTH_SECRET=<your-secret-here>' \
+  -e 'BETTER_AUTH_URL=<your-public-url-here>' \
+  ghcr.io/fynnhaupt/codefactory-studio:latest
+```
+
 ## Development
 
 ### Option 1: Local
