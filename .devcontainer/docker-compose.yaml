@@ -1,0 +1,26 @@
+services:
+  devcontainer:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+
+  postgres_localhost_proxy:
+    image: alpine/socat
+    network_mode: service:devcontainer
+    depends_on:
+      - postgres
+    command: TCP-LISTEN:5432,fork,reuseaddr TCP:postgres:5432
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: vscode
+    volumes:
+      - postgres_data:/var/lib/postgresql:Z
+
+volumes:
+  postgres_data:
