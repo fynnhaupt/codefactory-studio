@@ -5,6 +5,7 @@
 # Studio
 
 <div>
+  <img src="https://img.shields.io/badge/Status-WIP-blue" alt="Status">
   <a href="https://github.com/fynnhaupt/codefactory-studio/actions/workflows/check.yaml">
     <img src="https://github.com/fynnhaupt/codefactory-studio/actions/workflows/check.yaml/badge.svg" alt="Check">
   </a>
