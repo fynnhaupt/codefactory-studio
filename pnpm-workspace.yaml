@@ -1,5 +1,7 @@
 allowBuilds:
+  '@parcel/watcher': true
   '@prisma/engines': true
+  '@swc/core': true
   cypress: true
   prisma: true
   sharp: false
