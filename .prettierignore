@@ -48,3 +48,9 @@ next-env.d.ts
 
 # generated files
 /generated
+
+# cypress
+.nyc_output/
+cypress/downloads/
+cypress/screenshots/
+cypress/videos/
