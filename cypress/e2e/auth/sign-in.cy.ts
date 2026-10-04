@@ -99,6 +99,7 @@ describe('sign in', () => {
     cy.visit('/en/sign-in');
     cy.get('#email').should('have.attr', 'autocomplete', 'email');
     cy.get('#password').should('have.attr', 'autocomplete', 'current-password');
+    cy.get('#email').type('person@example.com');
     cy.get('#password').type('wrong-password');
     cy.get('button[aria-label="Show password"]').click();
     cy.get('#password').should('have.attr', 'type', 'text');
