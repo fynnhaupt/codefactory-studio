@@ -1,3 +1,4 @@
+import './env';
 import { defineConfig } from 'cypress';
 import { registerBetterAuthTasks } from './cypress/tasks/better-auth';
 

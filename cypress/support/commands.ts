@@ -35,3 +35,5 @@
 //     }
 //   }
 // }
+
+import '../commands/better-auth';
