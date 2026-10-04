@@ -12,7 +12,7 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
   }
 
   return (
-    <main className="bg-muted/40 flex min-h-screen items-center justify-center px-4 py-12">
+    <main className="flex min-h-screen items-center justify-center px-4 py-12">
       <SignInForm locale={locale} />
     </main>
   );

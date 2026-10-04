@@ -1,20 +1,26 @@
 {
-  "SignIn": {
-    "title": "Sign in",
-    "description": "Enter your email and password to access your account.",
-    "email": "Email",
-    "password": "Password",
-    "emailInvalid": "Enter a valid email address.",
-    "passwordRequired": "Enter your password.",
-    "showPassword": "Show password",
-    "hidePassword": "Hide password",
-    "submit": "Sign in",
-    "submitting": "Signing in…",
-    "invalidCredentialsTitle": "Unable to sign in",
-    "invalidCredentials": "The email or password is incorrect.",
-    "requestFailedTitle": "Sign-in failed",
-    "requestFailed": "We couldn't sign you in. Please try again.",
-    "networkErrorTitle": "Connection problem",
-    "networkError": "We couldn't reach the server. Check your connection and try again."
+  "sign-in": {
+    "title": "Sign In",
+    "description": "Enter your email below to login to your account",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email",
+      "invalid": "Enter a valid email address."
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password",
+      "invalid": {
+        "min-length": "Password must be at least 8 characters long.",
+        "uppercase": "Password must contain at least one uppercase letter.",
+        "lowercase": "Password must contain at least one lowercase letter.",
+        "number": "Password must contain at least one number.",
+        "special": "Password must contain at least one special character."
+      }
+    },
+    "show-password": "Show password",
+    "hide-password": "Hide password",
+    "remember-me": "Remember me",
+    "submit": "Login"
   }
 }

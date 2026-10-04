@@ -1,87 +1,70 @@
 'use client';
 
-import { useRef, useState, type FormEvent } from 'react';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput
+} from '@/components/ui/input-group';
 import { authClient } from '@/lib/auth-client';
 import { toast } from '@/components/ui/toast';
+import { Checkbox } from '../ui/checkbox';
+import { Spinner } from '../ui/spinner';
 
-type Props = { locale: string };
-type Credentials = { email: string; password: string };
+type Props = Readonly<{ locale: string }>;
 
 export function SignInForm({ locale }: Props) {
-  const t = useTranslations('SignIn');
+  const t = useTranslations('sign-in');
+
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const submissionLock = useRef(false);
+
   const schema = z.object({
-    email: z.email(t('emailInvalid')),
-    password: z.string().min(1, t('passwordRequired'))
+    email: z.email(t('email.invalid')),
+    password: z
+      .string()
+      .trim()
+      .min(8, t('password.invalid.min-length'))
+      .regex(/[A-Z]/, t('password.invalid.uppercase'))
+      .regex(/[a-z]/, t('password.invalid.lowercase'))
+      .regex(/[0-9]/, t('password.invalid.number'))
+      .regex(/[^A-Za-z0-9]/, t('password.invalid.special')),
+    rememberMe: z.boolean()
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting }
-  } = useForm<Credentials>({
+
+  const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    mode: 'onSubmit',
-    reValidateMode: 'onChange',
-    defaultValues: { email: '', password: '' }
+    mode: 'onTouched',
+    defaultValues: { email: '', password: '', rememberMe: false }
   });
 
-  const onSubmit = async ({ email, password }: Credentials) => {
-    try {
-      const result = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: `/${locale}`
-      });
+  const onSubmit = async ({ email, password, rememberMe }: z.infer<typeof schema>) => {
+    const { error } = await authClient.signIn.email({
+      email,
+      password,
+      rememberMe
+    });
 
-      if (result.error) {
-        const code = result.error.code?.toUpperCase();
-        toast.add({
-          title: t(
-            code === 'INVALID_EMAIL_OR_PASSWORD' ? 'invalidCredentialsTitle' : 'requestFailedTitle'
-          ),
-          description: t(
-            code === 'INVALID_EMAIL_OR_PASSWORD' ? 'invalidCredentials' : 'requestFailed'
-          ),
-          type: 'error'
-        });
-        return;
-      }
-
-      router.replace('/', { locale });
-    } catch {
+    if (error) {
       toast.add({
-        title: t('networkErrorTitle'),
-        description: t('networkError'),
-        type: 'error'
+        type: 'error',
+        description: error.message
       });
-    }
-  };
-
-  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    if (submissionLock.current) {
-      event.preventDefault();
       return;
     }
 
-    submissionLock.current = true;
-    try {
-      await handleSubmit(onSubmit)(event);
-    } finally {
-      submissionLock.current = false;
-    }
+    router.replace('/', { locale });
   };
 
   return (
@@ -91,63 +74,86 @@ export function SignInForm({ locale }: Props) {
         <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form noValidate onSubmit={onFormSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-            <Field data-invalid={Boolean(errors.email) || undefined}>
-              <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                autoCapitalize="none"
-                autoCorrect="off"
-                aria-invalid={Boolean(errors.email)}
-                aria-describedby={errors.email ? 'email-error' : undefined}
-                {...register('email')}
-              />
-              {errors.email && (
-                <FieldDescription id="email-error" role="alert">
-                  {errors.email.message}
-                </FieldDescription>
+            <Controller
+              name="email"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="form-sign-in-email">{t('email.label')}</FieldLabel>
+                  <Input
+                    {...field}
+                    required
+                    id="form-sign-in-email"
+                    type="email"
+                    aria-invalid={fieldState.invalid}
+                    placeholder={t('email.placeholder')}
+                    autoComplete="email"
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
               )}
-            </Field>
-            <Field data-invalid={Boolean(errors.password) || undefined}>
-              <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
-              <InputGroup>
-                <InputGroupInput
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  className="pr-12"
-                  aria-invalid={Boolean(errors.password)}
-                  aria-describedby={errors.password ? 'password-error' : undefined}
-                  {...register('password')}
-                />
-                <InputGroupAddon>
-                  <button
-                    type="button"
-                    className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex size-8 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
-                    aria-label={showPassword ? t('hidePassword') : t('showPassword')}
-                    aria-pressed={showPassword}
-                    onClick={() => setShowPassword((visible) => !visible)}
-                  >
-                    {showPassword ? (
-                      <EyeOff aria-hidden="true" size={18} />
-                    ) : (
-                      <Eye aria-hidden="true" size={18} />
-                    )}
-                  </button>
-                </InputGroupAddon>
-              </InputGroup>
-              {errors.password && (
-                <FieldDescription id="password-error" role="alert">
-                  {errors.password.message}
-                </FieldDescription>
+            />
+
+            <Controller
+              name="password"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="form-sign-in-password">{t('password.label')}</FieldLabel>
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      required
+                      id="form-sign-in-password"
+                      type={showPassword ? 'text' : 'password'}
+                      aria-invalid={fieldState.invalid}
+                      placeholder={t('password.placeholder')}
+                      autoComplete="current-password"
+                    />
+                    <InputGroupAddon align="inline-end">
+                      <InputGroupButton
+                        aria-label={t(showPassword ? 'hide-password' : 'show-password')}
+                        title={t(showPassword ? 'hide-password' : 'show-password')}
+                        size="icon-xs"
+                        onClick={() => {
+                          setShowPassword((prev) => !prev);
+                        }}
+                      >
+                        {showPassword ? <EyeOff /> : <Eye />}
+                      </InputGroupButton>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
               )}
-            </Field>
-            <Button className="w-full" type="submit" disabled={isSubmitting}>
-              {isSubmitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-              {isSubmitting ? t('submitting') : t('submit')}
+            />
+
+            <Controller
+              name="rememberMe"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} orientation="horizontal">
+                  <Checkbox
+                    id="form-sign-in-remember-me"
+                    name={field.name}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    aria-invalid={fieldState.invalid}
+                  />
+                  <FieldLabel htmlFor="form-sign-in-remember-me" className="leading-none">
+                    {t('remember-me')}
+                  </FieldLabel>
+                </Field>
+              )}
+            />
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={!form.formState.isValid || form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? <Spinner /> : t('submit')}
             </Button>
           </FieldGroup>
         </form>
