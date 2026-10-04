@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
+import { cn } from 'cn';
 import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans'
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -9,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<'/[locale]'>) {
   return (
-    <html lang="en" className="antialiased">
+    <html lang="en" className={cn(inter.variable, 'antialiased')}>
       <body>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
