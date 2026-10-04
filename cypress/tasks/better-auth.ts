@@ -11,6 +11,7 @@ export interface TestHelpers {
     overrides?: Record<string, unknown>
   ): Promise<Record<string, unknown> | null>;
   betterAuthSaveUser(user: User): Promise<User>;
+  betterAuthSetUserPassword(opts: { user: User; password: string }): Promise<null>;
   betterAuthSaveOrganization(org: Record<string, unknown>): Promise<Record<string, unknown> | null>;
   betterAuthAddMember(opts: {
     userId: string;
@@ -50,6 +51,19 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
     betterAuthSaveUser: async (user) => {
       const testUtils = await getTestUtils();
       return await testUtils.saveUser(user);
+    },
+    betterAuthSetUserPassword: async ({ user, password }) => {
+      const ctx = await testAuth.$context;
+      const hash = await ctx.password.hash(password);
+
+      await ctx.internalAdapter.createAccount({
+        accountId: user.id,
+        providerId: 'credential',
+        userId: user.id,
+        password: hash
+      });
+
+      return null;
     },
     betterAuthSaveOrganization: async (org) => {
       const testUtils = await getTestUtils();
