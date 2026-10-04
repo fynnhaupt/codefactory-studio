@@ -241,6 +241,9 @@ importers:
       next-intl:
         specifier: ^4.14.9
         version: 4.14.9(@swc/helpers@0.5.23)(@types/react@19.3.0)(next@16.3.8(@babel/core@7.29.7(supports-color@8.1.1))(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       pg:
         specifier: ^8.23.1
         version: 8.23.1
@@ -4026,6 +4029,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  next-themes@0.4.6:
+    resolution: {integrity: sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
 
   next@16.3.8:
     resolution: {integrity: sha512-U7QEZaTini6wKrb8A8hqLLqYQyCetegKjCpJOyxk642vWoMoU1x5PyZCJFvgYgiptA8xc5j/9xYlZFO7w9Sjmw==}
@@ -8990,6 +8999,11 @@ snapshots:
       '@types/react': 19.3.0
     transitivePeerDependencies:
       - '@swc/helpers'
+
+  next-themes@0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+    dependencies:
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
   next@16.3.8(@babel/core@7.29.7(supports-color@8.1.1))(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
