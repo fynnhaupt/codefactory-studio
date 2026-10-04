@@ -14,6 +14,29 @@ A self-hosted typescript platform for orchestrating automated software factories
 
 CodeFactory Studio is completely **open-source** and **self-hosted** - designed to be fully customizable.
 
+## Quick Start
+
+## Development
+
+### Option 1: Local
+
+**Prerequisites**: [Docker](https://www.docker.com/), [Node.js](https://nodejs.org/), [pnpm](https://pnpm.io/)
+
+See [.tool-versions](https://github.com/fynnhaupt/codefactory-studio/blob/main/.tool-versions) for the required Node.js and pnpm versions.
+
+```sh
+docker compose up -d
+pnpm install
+pnpm db:migrate:deploy
+pnpm dev
+```
+
+### Option 2: Devcontainer
+
+**Prerequisites**: Capability to run [devcontainer](https://containers.dev/)
+
+**Depends on your environment.**
+
 ## License
 
 Released under the [AGPL-3.0 License](https://github.com/fynnhaupt/codefactory-studio/blob/main/LICENSE)
