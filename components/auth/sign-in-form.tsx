@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { authClient } from '@/lib/auth-client';
 import { toast } from '@/components/ui/toast';
 
@@ -114,7 +114,7 @@ export function SignInForm({ locale }: Props) {
             <Field data-invalid={Boolean(errors.password) || undefined}>
               <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
               <InputGroup>
-                <Input
+                <InputGroupInput
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
