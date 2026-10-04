@@ -8,6 +8,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+## Forms
+
+For all forms, show field validation errors beside the respective field and failed submission requests through the shadcn toaster. Translate all user-facing error messages with next-intl.
+
 ## Agent skills
 
 ### Issue tracker
