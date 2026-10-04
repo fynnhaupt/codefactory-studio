@@ -36,7 +36,7 @@ describe('sign in', () => {
     cy.contains('Enter your password.').should('not.exist');
   });
 
-  it('shows one common invalid-credentials error and prevents duplicate submissions', () => {
+  it('prevents duplicate submissions while the request is pending', () => {
     let requests = 0;
     cy.intercept('POST', '/api/auth/sign-in/email', (request) => {
       requests += 1;
@@ -45,13 +45,39 @@ describe('sign in', () => {
         statusCode: 401,
         body: { code: 'INVALID_EMAIL_OR_PASSWORD', message: 'Invalid email or password' }
       });
-    });
+    }).as('signIn');
     cy.visit('/en/sign-in');
     cy.get('#email').type('person@example.com');
     cy.get('#password').type('wrong-password');
-    cy.get('button[type="submit"]').dblclick();
-    cy.contains('The email or password is incorrect.').should('be.visible');
+    cy.get('form').then(($form) => {
+      const form = $form[0] as HTMLFormElement;
+      form.requestSubmit();
+      form.requestSubmit();
+    });
+    cy.get('button[type="submit"]').should('be.disabled');
+    cy.wait('@signIn');
     cy.then(() => expect(requests).to.eq(1));
+  });
+
+  it('shows the same invalid-credentials toast for a wrong password and an unknown email', () => {
+    cy.intercept('POST', '/api/auth/sign-in/email').as('invalidAttempt');
+
+    credentials().then((user) => {
+      cy.visit('/en/sign-in');
+      cy.get('#email').type(user.email);
+      cy.get('#password').type('wrong-password');
+      cy.get('button[type="submit"]').click();
+      cy.wait('@invalidAttempt').its('response.statusCode').should('eq', 401);
+      cy.contains('The email or password is incorrect.').should('be.visible');
+
+      cy.get('[data-slot="toast-close"]').click();
+      cy.contains('The email or password is incorrect.').should('not.exist');
+      cy.get('#email').clear().type(`unknown-${Date.now()}@example.com`);
+      cy.get('#password').clear().type('correct-horse-battery');
+      cy.get('button[type="submit"]').click();
+      cy.wait('@invalidAttempt').its('response.statusCode').should('eq', 401);
+      cy.contains('The email or password is incorrect.').should('be.visible');
+    });
   });
 
   it('distinguishes a network failure from invalid credentials', () => {
