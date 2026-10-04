@@ -43,6 +43,33 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
+  cypress:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_USER: vscode
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm cypress:run
+
   audit:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
