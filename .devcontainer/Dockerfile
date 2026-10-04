@@ -4,8 +4,19 @@ FROM mcr.microsoft.com/devcontainers/base:trixie
 RUN apt update && \
 	apt upgrade -y && \
 	apt install -y \
-		git \
-		golang
+	git \
+	golang \
+	libgtk-3-0t64 \
+	libgbm-dev \
+	libnotify-dev \
+	libnss3 \
+	libxss1 \
+	libasound2t64 \
+	libxtst6 \
+	xauth \
+	xvfb \
+	chromium \
+	chromium-driver
 
 # Install asdf
 RUN GOBIN=/usr/local/bin go install github.com/asdf-vm/asdf/cmd/asdf@v0.20.0
@@ -16,8 +27,8 @@ ENV PATH="/home/vscode/.asdf/shims:/usr/local/bin:${PATH}"
 RUN mkdir -p /etc/zsh/completions && \
 	asdf completion zsh > /etc/zsh/completions/_asdf && \
 	printf '%s\n' \
-		'fpath=(/etc/zsh/completions $fpath)' \
-		'autoload -Uz compinit && compinit' >> /etc/zsh/zshrc
+	'fpath=(/etc/zsh/completions $fpath)' \
+	'autoload -Uz compinit && compinit' >> /etc/zsh/zshrc
 
 COPY --chown=vscode:vscode .tool-versions /home/vscode/.tool-versions
 USER vscode

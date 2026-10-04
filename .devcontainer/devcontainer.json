@@ -6,13 +6,20 @@
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2.7.0": {
       "configureZshAsDefaultShell": true
-    }
+    },
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
   },
   "portsAttributes": {
     "3000": {
       "label": "app"
+    },
+    "5901": {
+      "label": "vnc"
+    },
+    "6080": {
+      "label": "novnc"
     }
   },
-  "forwardPorts": [3000],
+  "forwardPorts": [3000, 5901, 6080],
   "postCreateCommand": "pnpm install && pnpm db:migrate:deploy"
 }
