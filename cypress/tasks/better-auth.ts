@@ -14,8 +14,8 @@ interface TestHelpers {
     organizationId: string;
     role?: string;
   }): Promise<Record<string, unknown> | undefined>;
-  deleteUser(userId: string): Promise<void>;
-  deleteOrganization(orgId: string): Promise<void>;
+  deleteUser(userId: string): Promise<null>;
+  deleteOrganization(orgId: string): Promise<null>;
   login(opts: TestAuthOptions): Promise<LoginResult>;
   getAuthHeaders(opts: TestAuthOptions): Promise<Headers>;
   getCookies(
@@ -24,7 +24,7 @@ interface TestHelpers {
     }
   ): Promise<TestCookie[]>;
   getOTP(identifier: string): Promise<string | undefined>;
-  clearOTPs(): Promise<void>;
+  clearOTPs(): Promise<null>;
 }
 
 async function getTestUtils() {
@@ -57,10 +57,12 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
     deleteUser: async (userId) => {
       const testUtils = await getTestUtils();
       await testUtils.deleteUser(userId);
+      return null;
     },
     deleteOrganization: async (orgId) => {
       const testUtils = await getTestUtils();
       await testUtils.deleteOrganization?.(orgId);
+      return null;
     },
     login: async (opts) => {
       const testUtils = await getTestUtils();
@@ -81,6 +83,7 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
     clearOTPs: async () => {
       const testUtils = await getTestUtils();
       testUtils.clearOTPs?.();
+      return null;
     }
   } satisfies TestHelpers;
 
