@@ -4,16 +4,14 @@ import { LoginResult, TestAuthOptions, TestCookie } from 'better-auth/plugins';
 
 interface TestHelpers {
   createUser(overrides?: Partial<User> & Record<string, unknown>): Promise<User>;
-  createOrganization(
-    overrides?: Record<string, unknown>
-  ): Promise<Record<string, unknown> | undefined>;
+  createOrganization(overrides?: Record<string, unknown>): Promise<Record<string, unknown> | null>;
   saveUser(user: User): Promise<User>;
-  saveOrganization(org: Record<string, unknown>): Promise<Record<string, unknown> | undefined>;
+  saveOrganization(org: Record<string, unknown>): Promise<Record<string, unknown> | null>;
   addMember(opts: {
     userId: string;
     organizationId: string;
     role?: string;
-  }): Promise<Record<string, unknown> | undefined>;
+  }): Promise<Record<string, unknown> | null>;
   deleteUser(userId: string): Promise<null>;
   deleteOrganization(orgId: string): Promise<null>;
   login(opts: TestAuthOptions): Promise<LoginResult>;
@@ -23,7 +21,7 @@ interface TestHelpers {
       domain?: string;
     }
   ): Promise<TestCookie[]>;
-  getOTP(identifier: string): Promise<string | undefined>;
+  getOTP(identifier: string): Promise<string | undefined | null>;
   clearOTPs(): Promise<null>;
 }
 
@@ -40,6 +38,7 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
     },
     createOrganization: async (overrides) => {
       const testUtils = await getTestUtils();
+      if (!testUtils.createOrganization) return null;
       return testUtils.createOrganization?.(overrides);
     },
     saveUser: async (user) => {
@@ -48,10 +47,12 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
     },
     saveOrganization: async (org) => {
       const testUtils = await getTestUtils();
+      if (!testUtils.saveOrganization) return null;
       return await testUtils.saveOrganization?.(org);
     },
     addMember: async (opts) => {
       const testUtils = await getTestUtils();
+      if (!testUtils.addMember) return null;
       return await testUtils.addMember?.(opts);
     },
     deleteUser: async (userId) => {
@@ -78,6 +79,7 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
     },
     getOTP: async (identifier) => {
       const testUtils = await getTestUtils();
+      if (!testUtils.getOTP) return null;
       return testUtils.getOTP?.(identifier);
     },
     clearOTPs: async () => {
