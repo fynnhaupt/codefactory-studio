@@ -1,5 +1,5 @@
 import { CFLogo } from '@/components/global/cf-logo';
-import { Particles } from '@/components/ui/particles';
+import { ThemedParticles } from '@/components/global/themed-particles';
 import { redirect } from '@/i18n/navigation';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
@@ -17,7 +17,7 @@ export default async function Layout({ children, params }: LayoutProps<'/[locale
         {children}
       </main>
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <Particles className="absolute inset-0" color="#000" />
+        <ThemedParticles className="absolute inset-0" />
       </div>
     </>
   );
