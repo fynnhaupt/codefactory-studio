@@ -97,7 +97,14 @@ jobs:
       - run: pnpm prisma migrate deploy
         env:
           NODE_ENV: test
+      - run: docker run -d --name smee-client deltaprojects/smee-client -u ${{ secrets._GITHUB_APP_WEBHOOK_URL }} -t http://localhost:3000/api/github/callback/webhook
       - run: pnpm cypress:run
+        env:
+          GITHUB_APP_APPID: ${{ secrets._GITHUB_APP_APPID }}
+          GITHUB_APP_PRIVATE_KEY: ${{ secrets._GITHUB_APP_PRIVATE_KEY }}
+          GITHUB_APP_CLIENT_ID: ${{ secrets._GITHUB_APP_CLIENT_ID }}
+          GITHUB_APP_CLIENT_SECRET: ${{ secrets._GITHUB_APP_CLIENT_SECRET }}
+          GITHUB_APP_WEBHOOK_SECRET: ${{ secrets._GITHUB_APP_WEBHOOK_SECRET }}
 
   audit:
     if: github.ref == 'refs/heads/main'

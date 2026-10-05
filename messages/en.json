@@ -1,27 +1,8 @@
 {
   "sign-in": {
     "title": "Sign In",
-    "description": "Enter your email below to login to your account",
-    "email": {
-      "label": "Email",
-      "placeholder": "Enter your email",
-      "invalid": "Enter a valid email address."
-    },
-    "password": {
-      "label": "Password",
-      "placeholder": "Enter your password",
-      "invalid": {
-        "min-length": "Password must be at least 8 characters long.",
-        "uppercase": "Password must contain at least one uppercase letter.",
-        "lowercase": "Password must contain at least one lowercase letter.",
-        "number": "Password must contain at least one number.",
-        "special": "Password must contain at least one special character."
-      }
-    },
-    "show-password": "Show password",
-    "hide-password": "Hide password",
-    "remember-me": "Remember me",
-    "submit": "Login"
+    "description": "Continue to login to your account",
+    "submit": "Continue with GitHub"
   },
   "messages": {
     "unknown-error": "An unknown error occurred. Please try again."

@@ -10,7 +10,7 @@ const globalForPrisma = global as unknown as {
 };
 
 export function getPrisma() {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = process.env.DATABASE_URL!;
   const adapter = globalForPrisma[PRISMA_ADAPTER_KEY] || new PrismaPg({ connectionString });
 
   const prisma =

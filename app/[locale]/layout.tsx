@@ -41,8 +41,8 @@ export default function RootLayout({ children }: LayoutProps<'/[locale]'>) {
           disableTransitionOnChange
         >
           <NextIntlClientProvider>
-            {children}
             <Toaster />
+            {children}
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
