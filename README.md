@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="340" alt="CodeFactory Logo" src="https://github.com/user-attachments/assets/afbd2545-f180-4b9e-90c0-bf5446a08503" />
+  <img width="340" alt="CodeFactory Logo" src="https://github.com/user-attachments/assets/a25ea27e-6494-424b-a5ce-6c95deddec6a" />
 </div>
 
 # Studio
