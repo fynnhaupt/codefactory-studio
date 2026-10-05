@@ -37,3 +37,4 @@
 // }
 
 import '../commands/better-auth';
+import '../commands/github-app';
