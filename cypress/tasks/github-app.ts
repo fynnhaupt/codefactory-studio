@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { getGithubApp } from '@/lib/github-app';
+import { getGitHubApp } from '@/lib/github-app';
 import type { Endpoints } from '@octokit/types';
 
 export type InstallationsResponse = Endpoints['GET /app/installations']['response']['data'];
@@ -10,10 +10,10 @@ export interface TestHelpers {
   githubAppDeleteInstallation(installationId: number): Promise<null>;
 }
 
-export function registerGithubAppTasks(on: Cypress.PluginEvents) {
+export function registerGitHubAppTasks(on: Cypress.PluginEvents) {
   const tasks = {
     githubAppListInstallations: async () => {
-      const app = getGithubApp();
+      const app = getGitHubApp();
 
       const installations = app.octokit.paginate.iterator(app.octokit.rest.apps.listInstallations, {
         per_page: 100
@@ -24,7 +24,7 @@ export function registerGithubAppTasks(on: Cypress.PluginEvents) {
       return allInstallations;
     },
     githubAppDeleteInstallation: async (installationId: number) => {
-      const app = getGithubApp();
+      const app = getGitHubApp();
       await app.octokit.rest.apps.deleteInstallation({ installation_id: installationId });
       return null;
     }

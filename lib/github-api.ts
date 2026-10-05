@@ -1,6 +1,6 @@
 import { Octokit } from 'octokit';
 
-export function getGithubApi(token: string) {
+export function getGitHubApi(token: string) {
   return new Octokit({
     auth: token
   });

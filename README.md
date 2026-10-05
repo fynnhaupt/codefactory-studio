@@ -30,6 +30,30 @@ CodeFactory Studio is completely **open-source** and **self-hosted** - designed 
 
 ## Quick Start
 
+### Generating Secrets
+
+You can generate secrets with `openssl rand -base64 32` if you have `openssl` installed.
+
+### Creating GitHub App
+
+1. Go to `Settings > Developer Settings > GitHub Apps > New GitHub App`
+
+2. Configure GitHub App Settings
+
+- `GitHub App name`: `<your-github-app-name>`
+- `Homepage URL`: `<your-public-url-here>`
+- `Redirect URI`: `<your-public-url-here>/api/auth/callback/github`
+- `Setup URL (optional)`: `<your-public-url-here>/api/github/callback/setup`
+- `Webhook Active`: `Yes`
+- `Webhook URL`: `<your-public-url-here>/api/github/callback/webhook`
+- `Webhook Secret`: [See here](https://github.com/fynnhaupt/codefactory-studio#generating-secrets)
+
+3. Configure GitHub App Permissions
+
+- `Account permissions > Email addresses`: `Read-only`
+
+4. Create GitHub App!
+
 ### Option 1: Docker Compose
 
 **Prerequisites**: [Docker](https://www.docker.com/)
@@ -71,8 +95,6 @@ volumes:
   postgres_data:
 ```
 
-You can generate secrets with `openssl rand -base64 32` if you have `openssl` installed.
-
 2. Start **CodeFactory Studio**
 
 ```sh
@@ -94,10 +116,48 @@ docker run -d \
   -e 'DATABASE_URL=postgresql://<your-username-here>:<your-password-here>@<your-postgres-host>:5432/<your-db-here>' \
   -e 'BETTER_AUTH_SECRET=<your-secret-here>' \
   -e 'BETTER_AUTH_URL=<your-public-url-here>' \
+  -e 'GITHUB_APP_APPID: <your-github-app-appid>' \
+  -e 'GITHUB_APP_CLIENT_ID: <your-github-app-client-id>' \
+  -e 'GITHUB_APP_CLIENT_SECRET: <your-github-app-client-secret>' \
+  -e 'GITHUB_APP_WEBHOOK_SECRET: <your-github-app-webhook-secret>' \
   ghcr.io/fynnhaupt/codefactory-studio:latest
 ```
 
 ## Development
+
+### Setup GitHub App
+
+1. Create GitHub App: [See Here](https://github.com/fynnhaupt/codefactory-studio#creating-github-app)
+
+2. Add `GITHUB_APP_XXX` to `.env`
+
+```dotenv
+...
+# GitHub App App ID
+GITHUB_APP_APPID="your-github-app-appid"
+# GitHub App Private Key
+GITHUB_APP_PRIVATE_KEY="your-github-app-private-key"
+# GitHub App Client ID
+GITHUB_APP_CLIENT_ID="your-github-app-client-id"
+# GitHub App Client Secret
+GITHUB_APP_CLIENT_SECRET="your-github-app-client-secret"
+# GitHub App Webhook Secret
+GITHUB_APP_WEBHOOK_SECRET="your-github-app-webhook-secret"
+```
+
+### Proxy GitHub App Webhook
+
+1. Get [Webhook Proxy Url](https://smee.io/new)
+
+2. Add `GITHUB_APP_WEBHOOK_PROXY_URL` to `.env`
+
+```dotenv
+...
+# GitHub App Webhook Proxy Url
+GITHUB_APP_WEBHOOK_PROXY_URL="your-github-app-webhook-proxy-url"
+```
+
+3. Run `pnpm github:webhook:proxy`
 
 ### Option 1: Local
 

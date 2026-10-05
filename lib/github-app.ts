@@ -2,11 +2,11 @@ import { App } from 'octokit';
 
 const GITHUB_APP_KEY = 'github-app';
 
-const globalForGithubApp = global as unknown as {
+const globalForGitHubApp = global as unknown as {
   [GITHUB_APP_KEY]?: App;
 };
 
-export function getGithubApp() {
+export function getGitHubApp() {
   const appId = process.env.GITHUB_APP_APPID!;
   const privateKey = process.env.GITHUB_APP_PRIVATE_KEY!;
 
@@ -19,8 +19,8 @@ export function getGithubApp() {
   });
 
   if (process.env.NODE_ENV !== 'production') {
-    if (globalForGithubApp[GITHUB_APP_KEY] === undefined) {
-      globalForGithubApp[GITHUB_APP_KEY] = app;
+    if (globalForGitHubApp[GITHUB_APP_KEY] === undefined) {
+      globalForGitHubApp[GITHUB_APP_KEY] = app;
     }
   }
 
