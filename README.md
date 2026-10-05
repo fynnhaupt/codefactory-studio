@@ -1,5 +1,9 @@
 <div align="center">
-  <img width="340" alt="CodeFactory Logo" src="https://github.com/user-attachments/assets/afbd2545-f180-4b9e-90c0-bf5446a08503" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/26327420-f308-4e26-b0fb-fdc3c0498a03" />
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/93bfbfeb-af66-4007-9097-37748fea85d5" />
+    <img width="340" alt="CodeFactory Logo" src="https://github.com/user-attachments/assets/dd75592b-0289-4382-998b-76904c0465b9">
+  </picture>
 </div>
 
 # Studio
