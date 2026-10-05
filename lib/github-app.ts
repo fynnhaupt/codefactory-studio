@@ -12,7 +12,10 @@ export function getGithubApp() {
 
   const app = new App({
     appId: appId,
-    privateKey: privateKey
+    privateKey: privateKey,
+    webhooks: {
+      secret: process.env.GITHUB_APP_WEBHOOK_SECRET!
+    }
   });
 
   if (process.env.NODE_ENV !== 'production') {
