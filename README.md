@@ -51,6 +51,11 @@ services:
       DATABASE_URL: postgresql://codefactory-studio:<your-password-here>@postgres/codefactory-studio
       BETTER_AUTH_SECRET: <your-secret-here>
       BETTER_AUTH_URL: <your-public-url-here>
+      GITHUB_APP_APPID: <your-github-app-appid>
+      GITHUB_APP_PRIVATE_KEY: <your-github-app-private-key>
+      GITHUB_APP_CLIENT_ID: <your-github-app-client-id>
+      GITHUB_APP_CLIENT_SECRET: <your-github-app-client-secret>
+      GITHUB_APP_WEBHOOK_SECRET: <your-github-app-webhook-secret>
 
   postgres:
     image: postgres:18-alpine
