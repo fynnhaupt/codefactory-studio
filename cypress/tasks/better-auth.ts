@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { testAuth } from '@/lib/auth.test';
+import { getAuthTest } from '@/lib/auth.test';
 import { getPrisma } from '@/lib/prisma';
 import { User } from 'better-auth';
 import { LoginResult, TestAuthOptions, TestCookie } from 'better-auth/plugins';
@@ -33,7 +33,7 @@ export interface TestHelpers {
 }
 
 async function getTestUtils() {
-  const ctx = await testAuth.$context;
+  const ctx = await getAuthTest().$context;
   return ctx.test;
 }
 
@@ -53,7 +53,7 @@ export function registerBetterAuthTasks(on: Cypress.PluginEvents) {
       return await testUtils.saveUser(user);
     },
     betterAuthSetUserPassword: async ({ user, password }) => {
-      const ctx = await testAuth.$context;
+      const ctx = await getAuthTest().$context;
       const hash = await ctx.password.hash(password);
 
       await ctx.internalAdapter.createAccount({
