@@ -5,9 +5,11 @@ import { admin } from 'better-auth/plugins';
 import { i18n, locales } from '@better-auth/i18n';
 
 export const authOptions = {
-  emailAndPassword: {
-    enabled: true,
-    disableSignUp: true
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!
+    }
   },
   plugins: [
     admin(),
