@@ -15,7 +15,10 @@ export function getAuthOptions() {
     socialProviders: {
       github: {
         clientId: process.env.GITHUB_APP_CLIENT_ID!,
-        clientSecret: process.env.GITHUB_APP_CLIENT_SECRET!
+        clientSecret: process.env.GITHUB_APP_CLIENT_SECRET!,
+        mapProfileToUser: (profile) => ({
+          email: profile.email ?? `${profile.id}@github.placeholder.invalid`
+        })
       }
     },
     plugins: [
