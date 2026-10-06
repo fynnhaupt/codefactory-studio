@@ -3,6 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { getPrisma } from './prisma';
 import { admin } from 'better-auth/plugins';
 import { i18n, locales } from '@better-auth/i18n';
+import { roles, defaultRole, updateUserRoleHook } from './permissions';
 
 const BETTER_AUTH_KEY = 'better-auth';
 
@@ -22,7 +23,10 @@ export function getAuthOptions() {
       }
     },
     plugins: [
-      admin(),
+      admin({
+        roles,
+        defaultRole
+      }),
       i18n({
         translations: {
           en: locales.en
@@ -32,6 +36,17 @@ export function getAuthOptions() {
     database: prismaAdapter(getPrisma(), {
       provider: 'postgresql'
     }),
+    databaseHooks: {
+      user: {
+        update: {
+          before: async (user, ctx) => {
+            const canUpdateRole = await updateUserRoleHook(user, ctx);
+            if (!canUpdateRole) return false;
+            return true;
+          }
+        }
+      }
+    },
     advanced: {
       database: {
         joins: true
